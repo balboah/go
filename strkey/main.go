@@ -203,7 +203,8 @@ func decodeString(src string) ([]byte, error) {
 	if leftoverBits > 0 {
 		lastChar := srcBytes[len(srcBytes)-1]
 		decodedLastChar := decodingTable[lastChar]
-		leftoverBitsMask := byte(0x0f) >> (4 - leftoverBits)
+		// Cast to unsigned int to be compatible with Go versions older than 1.13
+		leftoverBitsMask := byte(0x0f) >> uint64(4-leftoverBits)
 		if decodedLastChar&leftoverBitsMask != 0 {
 			return nil, errors.New("non-canonical strkey; unused bits should be set to 0")
 		}
